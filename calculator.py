@@ -17,24 +17,24 @@ import decimal
 # * 双倍工资包含涨的工资
 
 BASE = decimal.Decimal(50000)  # 初始月薪
-YEARS = 10  # 10年
 TOTAL_PAY = BASE  # 共计工资初始化
 THIS_YEAR = BASE  # 全年收入初始化
+YEARS = 10  # 10年
 TOTAL_MONTH = 12 * YEARS
+MONTH_UP = 0.17  # 工资涨幅
 
 for i in range(TOTAL_MONTH - 1):
-    if (i+2) % 12 == 2:
-        red_pack = THIS_YEAR * decimal.Decimal(float(0.047))  # 过年发红包
-        up_pay = BASE * decimal.Decimal(float(0.17))  # 涨工资
+    if (i + 2) % 12 == 2:
+        BASE *= decimal.Decimal(float(1 + MONTH_UP))  # 涨工资
+        TOTAL_PAY += BASE + THIS_YEAR * decimal.Decimal(float(0.047))  # 过年发红包
         THIS_YEAR = BASE  # 全年收入初始化
-        TOTAL_PAY += BASE + up_pay + red_pack
-    if (i+2) % 12 == 0:
-        up_pay = BASE * decimal.Decimal(float(0.17))  # 涨工资
-        THIS_YEAR += (BASE + up_pay) * 2
-        TOTAL_PAY += (BASE + up_pay) * 2
+    if (i + 2) % 12 == 0:
+        BASE *= decimal.Decimal(float(1 + MONTH_UP))  # 涨工资
+        TOTAL_PAY += BASE * 2
+        THIS_YEAR += BASE * 2
     else:
-        up_pay = BASE * decimal.Decimal(float(0.17))  # 涨工资
-        THIS_YEAR += BASE + up_pay
-        TOTAL_PAY += BASE + up_pay
+        BASE *= decimal.Decimal(float(1 + MONTH_UP))  # 涨工资
+        TOTAL_PAY += BASE
+        THIS_YEAR += BASE
 
 print(round(TOTAL_PAY, 0))
